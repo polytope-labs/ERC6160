@@ -1,0 +1,33 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "ast": {
+    "absolutePath": "src/tokens/ERC1155.sol",
+    "id": 8,
+    "exportedSymbols": {},
+    "nodeType": "SourceUnit",
+    "src": "0:24:3",
+    "nodes": [
+      {
+        "id": 7,
+        "nodeType": "PragmaDirective",
+        "src": "0:24:3",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".17"
+        ]
+      }
+    ]
+  },
+  "id": 3
+}
