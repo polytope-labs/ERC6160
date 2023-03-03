@@ -15,8 +15,7 @@ contract Calculate {
             ierc6160ext20.grantRole.selector ^
             ierc6160ext20.revokeRole.selector ^
             ierc6160ext20.mint.selector ^
-            ierc6160ext20.burn.selector ^
-            ierc6160ext20.supportsInterface.selector);
+            ierc6160ext20.burn.selector);
         return selector;
     }
 
@@ -27,8 +26,7 @@ contract Calculate {
             ierc6160ext721.grantRole.selector ^
             ierc6160ext721.revokeRole.selector ^
             ierc6160ext721.safeMint.selector ^
-            ierc6160ext721.burn.selector ^
-            ierc6160ext721.supportsInterface.selector);
+            ierc6160ext721.burn.selector);
         return selector;
     }
 
@@ -41,8 +39,7 @@ contract Calculate {
             ierc6160ext1155.safeMint.selector ^
             ierc6160ext1155.safeMintBatch.selector ^
             ierc6160ext1155.burn.selector ^
-            ierc6160ext1155.burnBatch.selector ^
-            ierc6160ext1155.supportsInterface.selector);
+            ierc6160ext1155.burnBatch.selector);
         return selector;
     }
 }

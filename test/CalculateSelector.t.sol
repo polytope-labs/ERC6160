@@ -13,10 +13,10 @@ contract SelectorTest is Test {
     }
 
     function testSelector() public {
-        bytes4 IERC6160Ext20Selector = 0xba477dd9;
-        bytes4 IERC6160Ext721Selector = 0xa6a593d5;
-        bytes4 IERC6160Ext1155Selector = 0x9e88d9eb;
-        
+        bytes4 IERC6160Ext20Selector = 0xbbb8b47e;
+        bytes4 IERC6160Ext721Selector = 0xa75a5a72;
+        bytes4 IERC6160Ext1155Selector = 0x9f77104c;
+
         assertEq(bytes32(selectorContract.calculateSelectorIERC6160Ext20()), bytes32(IERC6160Ext20Selector));
         assertEq(bytes32(selectorContract.calculateSelectorIERC6160Ext721()), bytes32(IERC6160Ext721Selector));
         assertEq(bytes32(selectorContract.calculateSelectorIERC6160Ext1155()), bytes32(IERC6160Ext1155Selector));

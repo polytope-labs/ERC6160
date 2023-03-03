@@ -1,6 +1,5 @@
 pragma solidity ^0.8.17;
 
-import "openzeppelin-contracts/contracts/utils/introspection/IERC165.sol";
 import {IERC_ACL_CORE} from "./IERCAclCore.sol";
 
 // The EIP-165 identifier of this interface is 0xf4cedd5a
@@ -11,5 +10,13 @@ interface IERC5679Ext1155 {
    function burnBatch(address _from, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata _data) external;
 }
 
-// The EIP-165 identifier of this interface is 0x9e88d9eb
-interface IERC6160Ext1155 is IERC5679Ext1155, IERC_ACL_CORE, IERC165 {}
+
+/**
+ * @dev Interface of the ERC6160 standard, as defined in
+ * https://github.com/polytope-labs/EIPs/blob/master/EIPS/eip-6160.md.
+ *
+ * @author Polytope Labs
+ *
+ * The EIP-165 identifier of this interface is 0x9f77104c
+ */
+interface IERC6160Ext1155 is IERC5679Ext1155, IERC_ACL_CORE {}
