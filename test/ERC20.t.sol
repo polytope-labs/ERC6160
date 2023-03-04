@@ -12,6 +12,10 @@ contract ERC20Test is Test {
     address beef = 0x000000000000000000000000000000000000bEEF;
     address dead = 0x000000000000000000000000000000000000dEaD;
 
+    bytes4 constant _IERC6160Ext20_ID_ = 0xbbb8b47e;
+    bytes4 constant _IERC_ACL_CORE_ID_ = 0x6bb9cd16;
+    bytes4 constant _IERC5679Ext20_ID_ = 0xd0017968;
+
     // Roles
     bytes32 constant MINTER_ROLE = keccak256("MINTER ROLE");
     bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
@@ -30,9 +34,15 @@ contract ERC20Test is Test {
         assert(token.hasRole(BURNER_ROLE, address(this)));
     }
 
-    function testFailNotRoles() public view{
+    function testFailNotRoles() public view {
         assert(token.hasRole(MINTER_ROLE, address(0)));
         assert(token.hasRole(BURNER_ROLE, address(0)));
+    }
+
+    function testSupportInterface() public view {
+        assert(token.supportsInterface(_IERC6160Ext20_ID_));
+        assert(token.supportsInterface(_IERC5679Ext20_ID_));
+        assert(token.supportsInterface(_IERC_ACL_CORE_ID_));
     }
 
     function testMintAndBurn() public {

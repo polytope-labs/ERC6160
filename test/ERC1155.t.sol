@@ -10,6 +10,11 @@ contract ERC1155Test is Test {
     address beef = 0x000000000000000000000000000000000000bEEF;
     address dead = 0x000000000000000000000000000000000000dEaD;
 
+    // supported interfaces
+    bytes4 constant _IERC6160Ext1155_ID_ = 0x9f77104c;
+    bytes4 constant _IERC_ACL_CORE_ID_ = 0x6bb9cd16;
+    bytes4 constant _IERC5679Ext1155_ID_ = 0xf4cedd5a;
+
     // roles
     bytes32 constant MINTER_ROLE = keccak256("MINTER ROLE");
     bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
@@ -21,12 +26,12 @@ contract ERC1155Test is Test {
         token = new MultiChainNativeERC1155();
     }
 
-    function testRoles() public {
+    function testRoles() public view {
         assert(token.hasRole(MINTER_ROLE, address(this)));
         assert(token.hasRole(BURNER_ROLE, address(this)));
     }
 
-    function testFailNotRoles() public {
+    function testFailNotRoles() public view {
         // test not granted roles
         assert(token.hasRole(MINTER_ROLE, beef));
         assert(token.hasRole(BURNER_ROLE, beef));
@@ -40,6 +45,11 @@ contract ERC1155Test is Test {
         assert(token.hasRole(BURNER_ROLE, beef));
     }
 
+    function testSupportInterfaces() public view {
+        assert(token.supportsInterface(_IERC6160Ext1155_ID_));
+        assert(token.supportsInterface(_IERC5679Ext1155_ID_));
+        assert(token.supportsInterface(_IERC_ACL_CORE_ID_));
+    }
     function testMintAndBurn() public {
         token.safeMint(beef, TOKEN1_NFT, 1, bytes(""));
         assertEq(token.balanceOf(beef, TOKEN1_NFT), 1);
