@@ -21,7 +21,7 @@ contract ERC20Test is Test {
     bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
 
     function setUp() public {
-        token = new MultiChainNativeERC20();
+        token = new MultiChainNativeERC20("Multi Chain Native ERC20 TOken", "MCNT");
     }
 
     function testNameSymbol() public {

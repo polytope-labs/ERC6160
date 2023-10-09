@@ -27,7 +27,7 @@ contract MultiChainNativeERC20 is ERC165Storage, ERC20, IERC6160Ext20 {
     /// @notice mapping of admins of defined roles
     mapping(bytes32 => mapping(address => bool)) _rolesAdmin;
 
-    constructor() ERC20("Multi Chain Native ERC20 TOken", "MCNT") {
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
         _registerInterface(_IERC6160Ext20_ID_);
         _registerInterface(type(IERC5679Ext20).interfaceId);
         _registerInterface(type(IERC_ACL_CORE).interfaceId);
