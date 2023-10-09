@@ -21,7 +21,7 @@ contract ERC20Test is Test {
     bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
 
     function setUp() public {
-        token = new MultiChainNativeERC20("Multi Chain Native ERC20 TOken", "MCNT");
+        token = new MultiChainNativeERC20(address(this), "Multi Chain Native ERC20 TOken", "MCNT");
     }
 
     function testNameSymbol() public {
@@ -51,7 +51,6 @@ contract ERC20Test is Test {
         token.mint(beef, 10, bytes(""));
         assertEq(token.balanceOf(beef), 10);
         assertEq(token.totalSupply(), initialTotalSupply + 10);
-
 
         token.burn(beef, 5, bytes(""));
         assertEq(token.balanceOf(beef), 5);
