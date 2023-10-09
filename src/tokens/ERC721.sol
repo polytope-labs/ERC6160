@@ -41,7 +41,7 @@ contract MultiChainNativeERC721 is ERC721, ERC165Storage, IERC6160Ext721 {
 
     /// @notice Mints token with ID of `_tokenId` to the specified account `_to`
     function safeMint(address _to, uint256 _tokenId, bytes calldata _data) external {
-        if(!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
+        if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._safeMint(_to, _tokenId, _data);
     }
 
@@ -49,7 +49,7 @@ contract MultiChainNativeERC721 is ERC721, ERC165Storage, IERC6160Ext721 {
     function burn(address, uint256 _tokenId, bytes calldata) external {
         bool isApproved = _isApprovedOrOwner(_msgSender(), _tokenId);
         bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
-        if(!isApproved && !hasBurnRole) revert PermissionDenied();
+        if (!isApproved && !hasBurnRole) revert PermissionDenied();
         super._burn(_tokenId);
     }
 
@@ -65,7 +65,7 @@ contract MultiChainNativeERC721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /// @param _role The role to set for the account
     /// @param _account The account to be granted the specified role
     function grantRole(bytes32 _role, address _account) external {
-        if(!isRoleAdmin(_role)) revert NotRoleAdmin();
+        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = true;
     }
 
@@ -74,13 +74,19 @@ contract MultiChainNativeERC721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /// @param _role The role to revoke for the account
     /// @param _account The account whose role is to be revoked
     function revokeRole(bytes32 _role, address _account) external {
-        if(!isRoleAdmin(_role)) revert NotRoleAdmin();
+        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = false;
     }
 
     /// @notice EIP-165 style to query for supported interfaces
     /// @param _interfaceId The interface-id to query for support
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(ERC721, ERC165Storage)returns (bool) {
+    function supportsInterface(bytes4 _interfaceId)
+        public
+        view
+        virtual
+        override(ERC721, ERC165Storage)
+        returns (bool)
+    {
         return super.supportsInterface(_interfaceId);
     }
 
@@ -95,18 +101,19 @@ contract MultiChainNativeERC721 is ERC721, ERC165Storage, IERC6160Ext721 {
     }
 
     /// @notice Get the Minter-Role ID
-    function getMinterRole() external pure returns(bytes32) {
+    function getMinterRole() external pure returns (bytes32) {
         return MINTER_ROLE;
     }
 
     /// @notice Get the Burner-Role ID
-    function getBurnerRole() external pure returns(bytes32) {
+    function getBurnerRole() external pure returns (bytes32) {
         return BURNER_ROLE;
     }
 
-    /** INTERNAL FUNCTIONS **/
-    function isRoleAdmin(bytes32 role) internal view returns(bool) {
+    /**
+     * INTERNAL FUNCTIONS *
+     */
+    function isRoleAdmin(bytes32 role) internal view returns (bool) {
         return _rolesAdmin[role][_msgSender()];
     }
-
 }

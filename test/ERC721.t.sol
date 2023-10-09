@@ -20,7 +20,7 @@ contract ERC721Test is Test {
     bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
 
     function setUp() public {
-        token = new MultiChainNativeERC721();
+        token = new MultiChainNativeERC721(address(this), "", "");
     }
 
     function testRoles() public view {
@@ -28,7 +28,7 @@ contract ERC721Test is Test {
         assert(token.hasRole(BURNER_ROLE, address(this)));
     }
 
-    function testFailNotRoles() public view{
+    function testFailNotRoles() public view {
         // test not granted roles
         assert(token.hasRole(MINTER_ROLE, beef));
         assert(token.hasRole(BURNER_ROLE, beef));

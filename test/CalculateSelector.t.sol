@@ -8,7 +8,7 @@ import "../src/CalculateSelector.sol";
 contract SelectorTest is Test {
     Calculate selectorContract;
 
-     function setUp() public {
+    function setUp() public {
         selectorContract = new Calculate();
     }
 

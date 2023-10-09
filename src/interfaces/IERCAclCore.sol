@@ -1,6 +1,5 @@
 pragma solidity ^0.8.17;
 
-
 /**
  * @dev Interface of the EIP5982 standard, as defined in
  * https://github.com/polytope-labs/EIPs/blob/master/EIPS/eip-5982.md

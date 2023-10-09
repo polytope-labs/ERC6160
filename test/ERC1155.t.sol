@@ -23,7 +23,7 @@ contract ERC1155Test is Test {
     uint256 TOKEN2_FT = 1;
 
     function setUp() public {
-        token = new MultiChainNativeERC1155();
+        token = new MultiChainNativeERC1155(address(this), "");
     }
 
     function testRoles() public view {
@@ -50,6 +50,7 @@ contract ERC1155Test is Test {
         assert(token.supportsInterface(_IERC5679Ext1155_ID_));
         assert(token.supportsInterface(_IERC_ACL_CORE_ID_));
     }
+
     function testMintAndBurn() public {
         token.safeMint(beef, TOKEN1_NFT, 1, bytes(""));
         assertEq(token.balanceOf(beef, TOKEN1_NFT), 1);
@@ -85,6 +86,5 @@ contract ERC1155Test is Test {
         token.safeMintBatch(beef, tokenIds, amounts, bytes(""));
         assertEq(token.balanceOf(beef, TOKEN1_NFT), 1);
         assertEq(token.balanceOf(beef, TOKEN2_FT), 1000);
-
     }
 }
