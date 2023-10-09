@@ -27,16 +27,16 @@ contract MultiChainNativeERC721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /// @notice mapping of admins of defined roles
     mapping(bytes32 => mapping(address => bool)) _rolesAdmin;
 
-    constructor() ERC721("Multi Chain Native ERC721", "MCNT") {
+    constructor(address admin, string memory name, string memory symbol) ERC721(name, symbol) {
         _registerInterface(_IERC6160Ext721_ID_);
         _registerInterface(type(IERC5679Ext721).interfaceId);
         _registerInterface(type(IERC_ACL_CORE).interfaceId);
 
-        _rolesAdmin[MINTER_ROLE][msg.sender] = true;
-        _roles[MINTER_ROLE][msg.sender] = true;
+        _rolesAdmin[MINTER_ROLE][admin] = true;
+        _roles[MINTER_ROLE][admin] = true;
 
-        _rolesAdmin[BURNER_ROLE][msg.sender] = true;
-        _roles[BURNER_ROLE][msg.sender] = true;
+        _rolesAdmin[BURNER_ROLE][admin] = true;
+        _roles[BURNER_ROLE][admin] = true;
     }
 
     /// @notice Mints token with ID of `_tokenId` to the specified account `_to`

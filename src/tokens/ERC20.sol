@@ -27,18 +27,18 @@ contract MultiChainNativeERC20 is ERC165Storage, ERC20, IERC6160Ext20 {
     /// @notice mapping of admins of defined roles
     mapping(bytes32 => mapping(address => bool)) _rolesAdmin;
 
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+    constructor(address admin, string memory name, string memory symbol) ERC20(name, symbol) {
         _registerInterface(_IERC6160Ext20_ID_);
         _registerInterface(type(IERC5679Ext20).interfaceId);
         _registerInterface(type(IERC_ACL_CORE).interfaceId);
 
-        super._mint(msg.sender, 1_000_000 * 10e18); // 1million initial supply
+        super._mint(admin, 1_000_000 * 10e18); // 1million initial supply
 
-        _rolesAdmin[MINTER_ROLE][msg.sender] = true;
-        _roles[MINTER_ROLE][msg.sender] = true;
+        _rolesAdmin[MINTER_ROLE][admin] = true;
+        _roles[MINTER_ROLE][admin] = true;
 
-        _rolesAdmin[BURNER_ROLE][msg.sender] = true;
-        _roles[BURNER_ROLE][msg.sender] = true;
+        _rolesAdmin[BURNER_ROLE][admin] = true;
+        _roles[BURNER_ROLE][admin] = true;
     }
 
     

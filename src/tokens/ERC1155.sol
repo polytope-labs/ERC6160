@@ -27,16 +27,16 @@ contract MultiChainNativeERC1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /// @notice mapping of admins of defined roles
     mapping(bytes32 => mapping(address => bool)) _rolesAdmin;
 
-    constructor() ERC1155("") {
+    constructor(address admin, string memory uri) ERC1155(uri) {
         _registerInterface(_IERC6160Ext1155_ID_);
         _registerInterface(type(IERC5679Ext1155).interfaceId);
         _registerInterface(type(IERC_ACL_CORE).interfaceId);
 
-        _rolesAdmin[MINTER_ROLE][msg.sender] = true;
-        _roles[MINTER_ROLE][msg.sender] = true;
+        _rolesAdmin[MINTER_ROLE][admin] = true;
+        _roles[MINTER_ROLE][admin] = true;
 
-        _rolesAdmin[BURNER_ROLE][msg.sender] = true;
-        _roles[BURNER_ROLE][msg.sender] = true;
+        _rolesAdmin[BURNER_ROLE][admin] = true;
+        _roles[BURNER_ROLE][admin] = true;
     }
 
     /// @notice Mints token to the specified account `_to`
