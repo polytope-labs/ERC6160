@@ -3,10 +3,10 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
-import "../src/tokens/ERC20.sol";
+import "../src/tokens/ERC6160Ext20.sol";
 
 contract ERC20Test is Test {
-    MultiChainNativeERC20 token;
+    ERC6160Ext20 token;
     address deployer = 0xb4c79daB8f259C7Aee6E5b2Aa729821864227e84;
 
     address beef = 0x000000000000000000000000000000000000bEEF;
@@ -21,7 +21,7 @@ contract ERC20Test is Test {
     bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
 
     function setUp() public {
-        token = new MultiChainNativeERC20(address(this), "Multi Chain Native ERC20 TOken", "MCNT");
+        token = new ERC6160Ext20(address(this), "Multi Chain Native ERC20 TOken", "MCNT");
     }
 
     function testNameSymbol() public {

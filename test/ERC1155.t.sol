@@ -3,10 +3,10 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
-import "../src/tokens/ERC1155.sol";
+import "../src/tokens/ERC6160Ext1155.sol";
 
 contract ERC1155Test is Test {
-    MultiChainNativeERC1155 token;
+    ERC6160Ext1155 token;
     address beef = 0x000000000000000000000000000000000000bEEF;
     address dead = 0x000000000000000000000000000000000000dEaD;
 
@@ -23,7 +23,7 @@ contract ERC1155Test is Test {
     uint256 TOKEN2_FT = 1;
 
     function setUp() public {
-        token = new MultiChainNativeERC1155(address(this), "");
+        token = new ERC6160Ext1155(address(this), "");
     }
 
     function testRoles() public view {
