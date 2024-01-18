@@ -6,7 +6,7 @@ import "forge-std/console.sol";
 import "../src/tokens/ERC6160Ext721.sol";
 
 contract ERC721Test is Test {
-    MultiChainNativeERC721 token;
+    ERC6160Ext721 token;
     address beef = 0x000000000000000000000000000000000000bEEF;
     address dead = 0x000000000000000000000000000000000000dEaD;
 
@@ -20,7 +20,7 @@ contract ERC721Test is Test {
     bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
 
     function setUp() public {
-        token = new MultiChainNativeERC721(address(this), "", "");
+        token = new ERC6160Ext721(address(this), "", "");
     }
 
     function testRoles() public view {
