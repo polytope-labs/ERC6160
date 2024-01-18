@@ -1,19 +1,19 @@
 pragma solidity ^0.8.17;
 
-import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/utils/introspection/ERC165Storage.sol";
 
-import {IERC6160Ext20, IERC5679Ext20, IERC_ACL_CORE} from "../interfaces/IERC6160Ext20.sol";
-
-/// @notice Thrown if account is not the admin of a given role
-error NotRoleAdmin();
+import {IERC6160Ext721, IERC5679Ext721, IERC_ACL_CORE} from "../interfaces/IERC6160Ext721.sol";
 
 /// @notice Thrown if account does not have required permission
 error PermissionDenied();
 
-contract MultiChainNativeERC20 is ERC165Storage, ERC20, IERC6160Ext20 {
-    /// @notice InterfaceId for ERC6160Ext20
-    bytes4 constant _IERC6160Ext20_ID_ = 0xbbb8b47e;
+/// @notice Thrown if account is not the admin of a given role
+error NotRoleAdmin();
+
+contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
+    /// @notice InterfaceId for ERC6160Ext721
+    bytes4 constant _IERC6160Ext721_ID_ = 0xa75a5a72;
 
     /// @notice The Id of Role required to mint token
     bytes32 constant MINTER_ROLE = keccak256("MINTER ROLE");
@@ -27,12 +27,10 @@ contract MultiChainNativeERC20 is ERC165Storage, ERC20, IERC6160Ext20 {
     /// @notice mapping of admins of defined roles
     mapping(bytes32 => mapping(address => bool)) _rolesAdmin;
 
-    constructor(address admin, string memory name, string memory symbol) ERC20(name, symbol) {
-        _registerInterface(_IERC6160Ext20_ID_);
-        _registerInterface(type(IERC5679Ext20).interfaceId);
+    constructor(address admin, string memory name, string memory symbol) ERC721(name, symbol) {
+        _registerInterface(_IERC6160Ext721_ID_);
+        _registerInterface(type(IERC5679Ext721).interfaceId);
         _registerInterface(type(IERC_ACL_CORE).interfaceId);
-
-        super._mint(admin, 1_000_000 * 10e18); // 1million initial supply
 
         _rolesAdmin[MINTER_ROLE][admin] = true;
         _roles[MINTER_ROLE][admin] = true;
@@ -41,16 +39,18 @@ contract MultiChainNativeERC20 is ERC165Storage, ERC20, IERC6160Ext20 {
         _roles[BURNER_ROLE][admin] = true;
     }
 
-    /// @notice Mints token to the specified account `_to`
-    function mint(address _to, uint256 _amount, bytes calldata) external {
+    /// @notice Mints token with ID of `_tokenId` to the specified account `_to`
+    function safeMint(address _to, uint256 _tokenId, bytes calldata _data) external {
         if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
-        super._mint(_to, _amount);
+        super._safeMint(_to, _tokenId, _data);
     }
 
-    /// @notice Burns token associated with the specified account `_from`
-    function burn(address _from, uint256 _amount, bytes calldata) external {
-        if (!isRoleAdmin(BURNER_ROLE) && !hasRole(BURNER_ROLE, _msgSender())) revert PermissionDenied();
-        super._burn(_from, _amount);
+    /// @notice Burns token with ID of `_tokenId`
+    function burn(address, uint256 _tokenId, bytes calldata) external {
+        bool isApproved = _isApprovedOrOwner(_msgSender(), _tokenId);
+        bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
+        if (!isApproved && !hasBurnRole) revert PermissionDenied();
+        super._burn(_tokenId);
     }
 
     /// @notice Checks that an account has a specified role
@@ -80,8 +80,24 @@ contract MultiChainNativeERC20 is ERC165Storage, ERC20, IERC6160Ext20 {
 
     /// @notice EIP-165 style to query for supported interfaces
     /// @param _interfaceId The interface-id to query for support
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(ERC165Storage) returns (bool) {
+    function supportsInterface(bytes4 _interfaceId)
+        public
+        view
+        virtual
+        override(ERC721, ERC165Storage)
+        returns (bool)
+    {
         return super.supportsInterface(_interfaceId);
+    }
+
+    /// @notice Get the account associated with token of ID `_tokenId`
+    function ownerOf(uint256 _tokenId) public view override returns (address) {
+        return super._ownerOf(_tokenId);
+    }
+
+    /// @notice Checks that token of ID `_tokenID` exists
+    function exists(uint256 _tokenID) external view returns (bool) {
+        return super._exists(_tokenID);
     }
 
     /// @notice Get the Minter-Role ID

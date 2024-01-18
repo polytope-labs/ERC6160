@@ -11,7 +11,7 @@ error PermissionDenied();
 /// @notice Thrown if account is not the admin of a given role
 error NotRoleAdmin();
 
-contract MultiChainNativeERC1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
+contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /// @notice InterfaceId for ERC6160Ext1155
     bytes4 constant _IERC6160Ext1155_ID_ = 0x9f77104c;
 

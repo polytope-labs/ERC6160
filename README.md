@@ -1,5 +1,5 @@
-# multichain-token
-An example implementation of EIP-6160
+# ERC6160
+Implementation of ERC6160
 
 This set of interfaces and contracts relates to the [Multi-Chain Native Token Standard.](https://github.com/polytope-labs/EIPs/blob/master/EIPS/eip-6160.md)
 

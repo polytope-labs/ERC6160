@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
-import "../src/tokens/ERC721.sol";
+import "../src/tokens/ERC6160Ext721.sol";
 
 contract ERC721Test is Test {
     MultiChainNativeERC721 token;
