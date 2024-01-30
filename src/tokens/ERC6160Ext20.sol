@@ -13,57 +13,50 @@ error PermissionDenied();
 
 contract ERC6160Ext20 is ERC165Storage, ERC20, IERC6160Ext20 {
     /// @notice InterfaceId for ERC6160Ext20
-    bytes4 constant _IERC6160Ext20_ID_ = 0xbbb8b47e;
+    bytes4 private constant IERC6160Ext20_ID = 0xbbb8b47e;
 
     /// @notice The Id of Role required to mint token
-    bytes32 constant MINTER_ROLE = keccak256("MINTER ROLE");
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER ROLE");
 
     /// @notice The Id of Role required to burn token
-    bytes32 constant BURNER_ROLE = keccak256("BURNER ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER ROLE");
 
     /// @notice mapping of defined roles in the contract
-    mapping(bytes32 => mapping(address => bool)) _roles;
+    mapping(bytes32 => mapping(address => bool)) internal _roles;
 
     /// @notice mapping of admins of defined roles
-    mapping(bytes32 => mapping(address => bool)) _rolesAdmin;
+    mapping(bytes32 => mapping(address => bool)) internal _rolesAdmin;
 
     constructor(address admin, string memory name, string memory symbol) ERC20(name, symbol) {
-        _registerInterface(_IERC6160Ext20_ID_);
+        _registerInterface(IERC6160Ext20_ID);
         _registerInterface(type(IERC5679Ext20).interfaceId);
         _registerInterface(type(IERC_ACL_CORE).interfaceId);
 
         _rolesAdmin[MINTER_ROLE][admin] = true;
-        _roles[MINTER_ROLE][admin] = true;
-
         _rolesAdmin[BURNER_ROLE][admin] = true;
+
+        _roles[MINTER_ROLE][admin] = true;
         _roles[BURNER_ROLE][admin] = true;
     }
 
     /// @notice Mints token to the specified account `_to`
-    function mint(address _to, uint256 _amount, bytes calldata) external {
-        if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
+    function mint(address _to, uint256 _amount, bytes calldata) public {
+        if (!_isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._mint(_to, _amount);
     }
 
     /// @notice Burns token associated with the specified account `_from`
-    function burn(address _from, uint256 _amount, bytes calldata) external {
-        if (!isRoleAdmin(BURNER_ROLE) && !hasRole(BURNER_ROLE, _msgSender())) revert PermissionDenied();
+    function burn(address _from, uint256 _amount, bytes calldata) public {
+        if (!_isRoleAdmin(BURNER_ROLE) && !hasRole(BURNER_ROLE, _msgSender())) revert PermissionDenied();
         super._burn(_from, _amount);
-    }
-
-    /// @notice Checks that an account has a specified role
-    /// @param _role The role to query
-    /// @param _account The account to query for the given role
-    function hasRole(bytes32 _role, address _account) public view returns (bool) {
-        return _roles[_role][_account];
     }
 
     /// @notice Grants a given role to the specified account
     /// @dev This method can only be called from an admin of the given role
     /// @param _role The role to set for the account
     /// @param _account The account to be granted the specified role
-    function grantRole(bytes32 _role, address _account) external {
-        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
+    function grantRole(bytes32 _role, address _account) public {
+        if (!_isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = true;
     }
 
@@ -71,8 +64,8 @@ contract ERC6160Ext20 is ERC165Storage, ERC20, IERC6160Ext20 {
     /// @dev This method can only be called from an admin of the given role
     /// @param _role The role to revoke for the account
     /// @param _account The account whose role is to be revoked
-    function revokeRole(bytes32 _role, address _account) external {
-        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
+    function revokeRole(bytes32 _role, address _account) public {
+        if (!_isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = false;
     }
 
@@ -82,20 +75,27 @@ contract ERC6160Ext20 is ERC165Storage, ERC20, IERC6160Ext20 {
         return super.supportsInterface(_interfaceId);
     }
 
+    /// @notice Checks that an account has a specified role
+    /// @param _role The role to query
+    /// @param _account The account to query for the given role
+    function hasRole(bytes32 _role, address _account) public view returns (bool) {
+        return _roles[_role][_account];
+    }
+
     /// @notice Get the Minter-Role ID
-    function getMinterRole() external pure returns (bytes32) {
+    function getMinterRole() public pure returns (bytes32) {
         return MINTER_ROLE;
     }
 
     /// @notice Get the Burner-Role ID
-    function getBurnerRole() external pure returns (bytes32) {
+    function getBurnerRole() public pure returns (bytes32) {
         return BURNER_ROLE;
     }
 
     /**
      * INTERNAL FUNCTIONS *
      */
-    function isRoleAdmin(bytes32 role) internal view returns (bool) {
+    function _isRoleAdmin(bytes32 role) internal view returns (bool) {
         return _rolesAdmin[role][_msgSender()];
     }
 }

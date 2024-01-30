@@ -40,13 +40,13 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
     }
 
     /// @notice Mints token with ID of `_tokenId` to the specified account `_to`
-    function safeMint(address _to, uint256 _tokenId, bytes calldata _data) external {
+    function safeMint(address _to, uint256 _tokenId, bytes calldata _data) public {
         if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._safeMint(_to, _tokenId, _data);
     }
 
     /// @notice Burns token with ID of `_tokenId`
-    function burn(address, uint256 _tokenId, bytes calldata) external {
+    function burn(address, uint256 _tokenId, bytes calldata) public {
         bool isApproved = _isApprovedOrOwner(_msgSender(), _tokenId);
         bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
         if (!isApproved && !hasBurnRole) revert PermissionDenied();
@@ -64,7 +64,7 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /// @dev This method can only be called from an admin of the given role
     /// @param _role The role to set for the account
     /// @param _account The account to be granted the specified role
-    function grantRole(bytes32 _role, address _account) external {
+    function grantRole(bytes32 _role, address _account) public {
         if (!isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = true;
     }
@@ -73,7 +73,7 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /// @dev This method can only be called from an admin of the given role
     /// @param _role The role to revoke for the account
     /// @param _account The account whose role is to be revoked
-    function revokeRole(bytes32 _role, address _account) external {
+    function revokeRole(bytes32 _role, address _account) public {
         if (!isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = false;
     }
@@ -96,17 +96,17 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
     }
 
     /// @notice Checks that token of ID `_tokenID` exists
-    function exists(uint256 _tokenID) external view returns (bool) {
+    function exists(uint256 _tokenID) public view returns (bool) {
         return super._exists(_tokenID);
     }
 
     /// @notice Get the Minter-Role ID
-    function getMinterRole() external pure returns (bytes32) {
+    function getMinterRole() public pure returns (bytes32) {
         return MINTER_ROLE;
     }
 
     /// @notice Get the Burner-Role ID
-    function getBurnerRole() external pure returns (bytes32) {
+    function getBurnerRole() public pure returns (bytes32) {
         return BURNER_ROLE;
     }
 
