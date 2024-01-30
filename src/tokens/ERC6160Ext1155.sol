@@ -40,21 +40,21 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     }
 
     /// @notice Mints token to the specified account `_to`
-    function safeMint(address _to, uint256 _id, uint256 _amount, bytes calldata _data) external {
+    function safeMint(address _to, uint256 _id, uint256 _amount, bytes calldata _data) public {
         if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._mint(_to, _id, _amount, _data);
     }
 
     /// @notice Mints token in batch to the specified account `_to`
     function safeMintBatch(address to, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata data)
-        external
+        public
     {
         if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._mintBatch(to, ids, amounts, data);
     }
 
     /// @notice Burns token associated with the specified account `_from`
-    function burn(address _from, uint256 _id, uint256 _amount, bytes[] calldata) external {
+    function burn(address _from, uint256 _id, uint256 _amount, bytes[] calldata) public {
         bool isApproved = isApprovedForAll(_msgSender(), _from);
         bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
         if (!isApproved && !hasBurnRole) revert PermissionDenied();
@@ -62,7 +62,7 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     }
 
     /// @notice Burns token in batch associated with the specified account `_from`
-    function burnBatch(address _from, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata) external {
+    function burnBatch(address _from, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata) public {
         bool isApproved = isApprovedForAll(_msgSender(), _from);
         bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
         if (!isApproved && !hasBurnRole) revert PermissionDenied();
@@ -80,7 +80,7 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /// @dev This method can only be called from an admin of the given role
     /// @param _role The role to set for the account
     /// @param _account The account to be granted the specified role
-    function grantRole(bytes32 _role, address _account) external {
+    function grantRole(bytes32 _role, address _account) public {
         if (!isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = true;
     }
@@ -89,7 +89,7 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /// @dev This method can only be called from an admin of the given role
     /// @param _role The role to revoke for the account
     /// @param _account The account whose role is to be revoked
-    function revokeRole(bytes32 _role, address _account) external {
+    function revokeRole(bytes32 _role, address _account) public {
         if (!isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = false;
     }
@@ -107,12 +107,12 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     }
 
     /// @notice Get the Minter-Role ID
-    function getMinterRole() external pure returns (bytes32) {
+    function getMinterRole() public pure returns (bytes32) {
         return MINTER_ROLE;
     }
 
     /// @notice Get the Burner-Role ID
-    function getBurnerRole() external pure returns (bytes32) {
+    function getBurnerRole() public pure returns (bytes32) {
         return BURNER_ROLE;
     }
 
