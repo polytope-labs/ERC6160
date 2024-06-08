@@ -41,14 +41,14 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
 
     /// @notice Mints token with ID of `_tokenId` to the specified account `_to`
     function safeMint(address _to, uint256 _tokenId, bytes calldata _data) public {
-        if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
+        if (!_isRoleAdmin(MINTER_ROLE) || !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._safeMint(_to, _tokenId, _data);
     }
 
     /// @notice Burns token with ID of `_tokenId`
     function burn(address, uint256 _tokenId, bytes calldata) public {
         bool isApproved = _isApprovedOrOwner(_msgSender(), _tokenId);
-        bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
+        bool hasBurnRole = _isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
         if (!isApproved && !hasBurnRole) revert PermissionDenied();
         super._burn(_tokenId);
     }
@@ -65,7 +65,7 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /// @param _role The role to set for the account
     /// @param _account The account to be granted the specified role
     function grantRole(bytes32 _role, address _account) public {
-        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
+        if (!_isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = true;
     }
 
@@ -74,8 +74,25 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /// @param _role The role to revoke for the account
     /// @param _account The account whose role is to be revoked
     function revokeRole(bytes32 _role, address _account) public {
-        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
+        if (!_isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = false;
+    }
+
+    /// @notice Changes the admin account to the provided address
+    /// @dev This method can only be called from an admin of the given role
+    /// @param newAdmin Address of the new admin
+    function changeAdmin(address newAdmin) public {
+        if (!_isRoleAdmin(MINTER_ROLE) || !_isRoleAdmin(BURNER_ROLE)) revert NotRoleAdmin();
+
+        delete _rolesAdmin[MINTER_ROLE][_msgSender()];
+        delete _rolesAdmin[BURNER_ROLE][_msgSender()];
+
+        if (newAdmin == address(0)) {
+            return;
+        }
+
+        _rolesAdmin[MINTER_ROLE][newAdmin] = true;
+        _rolesAdmin[BURNER_ROLE][newAdmin] = true;
     }
 
     /// @notice EIP-165 style to query for supported interfaces
@@ -113,7 +130,7 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
     /**
      * INTERNAL FUNCTIONS *
      */
-    function isRoleAdmin(bytes32 role) internal view returns (bool) {
+    function _isRoleAdmin(bytes32 role) internal view returns (bool) {
         return _rolesAdmin[role][_msgSender()];
     }
 }
