@@ -103,6 +103,10 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
         delete _rolesAdmin[MINTER_ROLE][_msgSender()];
         delete _rolesAdmin[BURNER_ROLE][_msgSender()];
 
+        if (newAdmin == address(0)) {
+            return;
+        }
+
         _rolesAdmin[MINTER_ROLE][newAdmin] = true;
         _rolesAdmin[BURNER_ROLE][newAdmin] = true;
     }

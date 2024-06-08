@@ -87,6 +87,10 @@ contract ERC6160Ext721 is ERC721, ERC165Storage, IERC6160Ext721 {
         delete _rolesAdmin[MINTER_ROLE][_msgSender()];
         delete _rolesAdmin[BURNER_ROLE][_msgSender()];
 
+        if (newAdmin == address(0)) {
+            return;
+        }
+
         _rolesAdmin[MINTER_ROLE][newAdmin] = true;
         _rolesAdmin[BURNER_ROLE][newAdmin] = true;
     }

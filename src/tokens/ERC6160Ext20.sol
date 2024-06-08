@@ -78,6 +78,10 @@ contract ERC6160Ext20 is ERC165Storage, ERC20, IERC6160Ext20 {
         delete _rolesAdmin[MINTER_ROLE][_msgSender()];
         delete _rolesAdmin[BURNER_ROLE][_msgSender()];
 
+        if (newAdmin == address(0)) {
+            return;
+        }
+
         _rolesAdmin[MINTER_ROLE][newAdmin] = true;
         _rolesAdmin[BURNER_ROLE][newAdmin] = true;
     }
