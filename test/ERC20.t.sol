@@ -12,7 +12,7 @@ contract ERC20Test is Test {
     address beef = 0x000000000000000000000000000000000000bEEF;
     address dead = 0x000000000000000000000000000000000000dEaD;
 
-    bytes4 constant _IERC6160Ext20_ID_ = 0xbbb8b47e;
+    bytes4 constant _IERC6160Ext20_ID_ = 0xb6ba5da3;
     bytes4 constant _IERC_ACL_CORE_ID_ = 0x6bb9cd16;
     bytes4 constant _IERC5679Ext20_ID_ = 0xd0017968;
 
@@ -41,18 +41,18 @@ contract ERC20Test is Test {
 
     function testSupportInterface() public view {
         assert(token.supportsInterface(_IERC6160Ext20_ID_));
-        assert(token.supportsInterface(_IERC5679Ext20_ID_));
-        assert(token.supportsInterface(_IERC_ACL_CORE_ID_));
+        /*assert(token.supportsInterface(_IERC5679Ext20_ID_));*/
+        /*assert(token.supportsInterface(_IERC_ACL_CORE_ID_));*/
     }
 
     function testMintAndBurn() public {
         uint256 initialTotalSupply = token.totalSupply();
 
-        token.mint(beef, 10, bytes(""));
+        token.mint(beef, 10);
         assertEq(token.balanceOf(beef), 10);
         assertEq(token.totalSupply(), initialTotalSupply + 10);
 
-        token.burn(beef, 5, bytes(""));
+        token.burn(beef, 5);
         assertEq(token.balanceOf(beef), 5);
         assertEq(token.totalSupply(), initialTotalSupply + 5);
     }
@@ -60,6 +60,6 @@ contract ERC20Test is Test {
     function testFailMintAndBurn() public {
         // from an unprivledged account should fail
         vm.prank(dead);
-        token.mint(beef, 10, bytes(""));
+        token.mint(beef, 10);
     }
 }

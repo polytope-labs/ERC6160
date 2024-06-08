@@ -41,7 +41,7 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
 
     /// @notice Mints token to the specified account `_to`
     function safeMint(address _to, uint256 _id, uint256 _amount, bytes calldata _data) public {
-        if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
+        if (!_isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._mint(_to, _id, _amount, _data);
     }
 
@@ -49,14 +49,14 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     function safeMintBatch(address to, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata data)
         public
     {
-        if (!isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
+        if (!_isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._mintBatch(to, ids, amounts, data);
     }
 
     /// @notice Burns token associated with the specified account `_from`
     function burn(address _from, uint256 _id, uint256 _amount, bytes[] calldata) public {
         bool isApproved = isApprovedForAll(_msgSender(), _from);
-        bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
+        bool hasBurnRole = _isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
         if (!isApproved && !hasBurnRole) revert PermissionDenied();
         super._burn(_from, _id, _amount);
     }
@@ -64,7 +64,7 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /// @notice Burns token in batch associated with the specified account `_from`
     function burnBatch(address _from, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata) public {
         bool isApproved = isApprovedForAll(_msgSender(), _from);
-        bool hasBurnRole = isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
+        bool hasBurnRole = _isRoleAdmin(BURNER_ROLE) || hasRole(BURNER_ROLE, _msgSender());
         if (!isApproved && !hasBurnRole) revert PermissionDenied();
         super._burnBatch(_from, ids, amounts);
     }
@@ -81,7 +81,7 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /// @param _role The role to set for the account
     /// @param _account The account to be granted the specified role
     function grantRole(bytes32 _role, address _account) public {
-        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
+        if (!_isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = true;
     }
 
@@ -90,8 +90,21 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /// @param _role The role to revoke for the account
     /// @param _account The account whose role is to be revoked
     function revokeRole(bytes32 _role, address _account) public {
-        if (!isRoleAdmin(_role)) revert NotRoleAdmin();
+        if (!_isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = false;
+    }
+
+    /// @notice Changes the admin account to the provided address
+    /// @dev This method can only be called from an admin of the given role
+    /// @param newAdmin Address of the new admin
+    function changeAdmin(address newAdmin) public {
+        if (!_isRoleAdmin(MINTER_ROLE) || !_isRoleAdmin(BURNER_ROLE)) revert NotRoleAdmin();
+
+        delete _rolesAdmin[MINTER_ROLE][_msgSender()];
+        delete _rolesAdmin[BURNER_ROLE][_msgSender()];
+
+        _rolesAdmin[MINTER_ROLE][newAdmin] = true;
+        _rolesAdmin[BURNER_ROLE][newAdmin] = true;
     }
 
     /// @notice EIP-165 style to query for supported interfaces
@@ -119,7 +132,7 @@ contract ERC6160Ext1155 is ERC1155, ERC165Storage, IERC6160Ext1155 {
     /**
      * INTERNAL FUNCTIONS *
      */
-    function isRoleAdmin(bytes32 role) internal view returns (bool) {
+    function _isRoleAdmin(bytes32 role) internal view returns (bool) {
         return _rolesAdmin[role][_msgSender()];
     }
 }

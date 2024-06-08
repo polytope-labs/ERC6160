@@ -13,7 +13,7 @@ error PermissionDenied();
 
 contract ERC6160Ext20 is ERC165Storage, ERC20, IERC6160Ext20 {
     /// @notice InterfaceId for ERC6160Ext20
-    bytes4 private constant IERC6160Ext20_ID = 0xbbb8b47e;
+    bytes4 private constant IERC6160Ext20_ID = 0xb6ba5da3;
 
     /// @notice The Id of Role required to mint token
     bytes32 public constant MINTER_ROLE = keccak256("MINTER ROLE");
@@ -40,13 +40,13 @@ contract ERC6160Ext20 is ERC165Storage, ERC20, IERC6160Ext20 {
     }
 
     /// @notice Mints token to the specified account `_to`
-    function mint(address _to, uint256 _amount, bytes calldata) public {
+    function mint(address _to, uint256 _amount) public {
         if (!_isRoleAdmin(MINTER_ROLE) && !hasRole(MINTER_ROLE, _msgSender())) revert PermissionDenied();
         super._mint(_to, _amount);
     }
 
     /// @notice Burns token associated with the specified account `_from`
-    function burn(address _from, uint256 _amount, bytes calldata) public {
+    function burn(address _from, uint256 _amount) public {
         if (!_isRoleAdmin(BURNER_ROLE) && !hasRole(BURNER_ROLE, _msgSender())) revert PermissionDenied();
         super._burn(_from, _amount);
     }
@@ -67,6 +67,19 @@ contract ERC6160Ext20 is ERC165Storage, ERC20, IERC6160Ext20 {
     function revokeRole(bytes32 _role, address _account) public {
         if (!_isRoleAdmin(_role)) revert NotRoleAdmin();
         _roles[_role][_account] = false;
+    }
+
+    /// @notice Changes the admin account to the provided address
+    /// @dev This method can only be called from an admin of the given role
+    /// @param newAdmin Address of the new admin
+    function changeAdmin(address newAdmin) public {
+        if (!_isRoleAdmin(MINTER_ROLE) || !_isRoleAdmin(BURNER_ROLE)) revert NotRoleAdmin();
+
+        delete _rolesAdmin[MINTER_ROLE][_msgSender()];
+        delete _rolesAdmin[BURNER_ROLE][_msgSender()];
+
+        _rolesAdmin[MINTER_ROLE][newAdmin] = true;
+        _rolesAdmin[BURNER_ROLE][newAdmin] = true;
     }
 
     /// @notice EIP-165 style to query for supported interfaces

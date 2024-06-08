@@ -13,7 +13,7 @@ contract SelectorTest is Test {
     }
 
     function testSelector() public {
-        bytes4 IERC6160Ext20Selector = 0xbbb8b47e;
+        bytes4 IERC6160Ext20Selector = 0xb6ba5da3;
         bytes4 IERC6160Ext721Selector = 0xa75a5a72;
         bytes4 IERC6160Ext1155Selector = 0x9f77104c;
 
