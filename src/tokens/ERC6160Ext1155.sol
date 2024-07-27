@@ -1,7 +1,7 @@
 pragma solidity ^0.8.17;
 
-import "openzeppelin-contracts/contracts/token/ERC1155/ERC1155.sol";
-import "openzeppelin-contracts/contracts/utils/introspection/ERC165Storage.sol";
+import "openzeppelin/token/ERC1155/ERC1155.sol";
+import "openzeppelin/utils/introspection/ERC165Storage.sol";
 
 import {IERC6160Ext1155, IERC5679Ext1155, IERC_ACL_CORE} from "../interfaces/IERC6160Ext1155.sol";
 
