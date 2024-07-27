@@ -34,11 +34,13 @@ jobs:
 
       - name: Run Forge build
         run: |
+          yarn
           forge --version
           forge build --sizes
         id: build
 
       - name: Run Forge tests
         run: |
+          yarn
           forge test -vvv
         id: test
