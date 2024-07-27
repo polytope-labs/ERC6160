@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT 
 pragma solidity ^0.8.17;
 
 /**
@@ -7,8 +8,8 @@ pragma solidity ^0.8.17;
  * The EIP-165 identifier of this interface is 0x6bb9cd16
  */
 interface IERC_ACL_CORE {
-    function hasRole(bytes32 role, address account) external view returns (bool);
-    function grantRole(bytes32 role, address account) external;
-    function revokeRole(bytes32 role, address account) external;
-    function changeAdmin(address newAdmin) external;
+	function hasRole(bytes32 role, address account) external view returns (bool);
+	function grantRole(bytes32 role, address account) external;
+	function revokeRole(bytes32 role, address account) external;
+	function changeAdmin(address newAdmin) external;
 }

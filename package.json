@@ -1,0 +1,35 @@
+{
+	"name": "@polytope-labs/erc6160",
+	"version": "0.1.0",
+	"description": "Official implementation of the EIP-6160 token standard",
+	"author": "Polytope Labs <hello@polytope.technology>",
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/polytope-labs/ERC6160/issues"
+	},
+	"homepage": "https://github.com/polytope-labs/ERC6160#readme",
+	"directories": {
+		"lib": "src"
+	},
+	"files": [
+		"./interfaces/**/*.sol"
+	],
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/polytope-labs/ERC6160.git"
+	},
+	"keywords": [
+		"hyperbridge",
+		"ethereum",
+		"polkadot",
+		"interoperability",
+		"cross-chain",
+		"bridges"
+	],
+	"dependencies": {
+		"openzeppelin-solidity": "^4.8.1",
+		"prettier": "^3.3.3",
+		"prettier-plugin-solidity": "^1.3.1"
+	}
+}
