@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "openzeppelin/token/ERC20/ERC20.sol";
-import "openzeppelin/utils/introspection/ERC165Storage.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 import {IERC6160Ext20, IERC5679Ext20, IERC_ACL_CORE} from "../interfaces/IERC6160Ext20.sol";
 
